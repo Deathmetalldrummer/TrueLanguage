@@ -146,26 +146,34 @@ function create_html() {
         var arr = data.split('\n');
         var arr2 = [];
         var menu = [];
-        for (let k = 0; k < 14; k++) {
+        for (let k = 0; k < 10; k++) {
             menu.push(`<a href='word_${k + 1}.html'>word_${k + 1}</a> `);
         }
+        var test = [];
         for (var i = 1, j = 0, count = 0; i <= arr.length; i++, j++) {
-            // console.log(arr[i]);
-            if (arr[i]) {
+            if (arr[i] === 'constructor') {
+                console.log(true)
+            }
+                // console.log(arr[i]);
+            if (arr[i] && arr[i] !== 'constructor') {
                 arr2.push(`<li data-word='${arr[i]}' data-id='${i}'>${arr[i]}</li>`);
                 // console.log(i, arr[i]);
-                if (j === 1500 || i === 19999) {
+                if (i >= 10457 && i <= 10457) {
+                    test.push(`<li data-word='${arr[i]}' data-id='${i}'>${arr[i]}</li>`);
+                }
+                if (j === 2000 || i === 19999) {
                     j = 0;
                     count++;
                     console.log(count);
-                    var res = `<nav>${menu.join(' ')}</nav><button id='button'>get JSON</button><style>li {display: inline-block;font-size: 6px;line-height: 1;} nav {border-bottom: 1px solid #ccc; padding-bottom: 1em; margin-bottom: 1em;} nav a {display: inline-block;} nav a + a {border-left: 1px solid #ccc;padding: 0.2em 0.4em;}</style>
+                    var res = `<nav>${menu.join(' ')}</nav><button id='button'>get JSON</button><style>li {display: inline-block;font-size: 10px;line-height: 1;} nav {border-bottom: 1px solid #ccc; padding-bottom: 1em; margin-bottom: 1em;} nav a {display: inline-block;} nav a + a {border-left: 1px solid #ccc;padding: 0.2em 0.4em;} ul {font-size: 10px;}</style>
                                 <ul id='ul' data-src='word_${count}.json'>${arr2.join(' ')}</ul>
                                 <script src='https://code.jquery.com/jquery-3.5.1.min.js'></script>
                                 <script src='../words.js'></script>`;
-                    fs.writeFile(`./words/word_${count}.html`,JSON.stringify(res),function () {});
+                    fs.writeFile(`./words/word_${count}.html`,res.replace(/\\n/g, ''),function () {});
                     arr2 = [];
                 }
             }
         }
+        fs.writeFile(`./words/word_test.html`, `<ol id='ul'>${test.join(' ')}</ol>`,function () {});
     });
 }
