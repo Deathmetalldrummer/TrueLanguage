@@ -13,7 +13,7 @@ var db = admin.firestore();
 // push_collection_to_firebase(1);
 // generate_collection(1);
 
-
+create_html();
 /*
 * Read 20k_en.txt & me_en.json
 * generate en_collection & en_setting */
@@ -134,5 +134,38 @@ function push_en_settings() {
         // admin.firestore().collection('Words').doc(lang[0].collection).update({
         //     words: ''
         // })
+    });
+}
+
+
+function create_html() {
+    fs.readFile('./20k_en.txt', 'utf8', function (err,data) {
+        if (err) {
+            return console.log(err);
+        }
+        var arr = data.split('\n');
+        var arr2 = [];
+        var menu = [];
+        for (let k = 0; k < 14; k++) {
+            menu.push(`<a href='word_${k + 1}.html'>word_${k + 1}</a> `);
+        }
+        for (var i = 1, j = 0, count = 0; i <= arr.length; i++, j++) {
+            // console.log(arr[i]);
+            if (arr[i]) {
+                arr2.push(`<li data-word='${arr[i]}' data-id='${i}'>${arr[i]}</li>`);
+                // console.log(i, arr[i]);
+                if (j === 1500 || i === 19999) {
+                    j = 0;
+                    count++;
+                    console.log(count);
+                    var res = `<nav>${menu.join(' ')}</nav><button id='button'>get JSON</button><style>li {display: inline-block;font-size: 6px;line-height: 1;} nav {border-bottom: 1px solid #ccc; padding-bottom: 1em; margin-bottom: 1em;} nav a {display: inline-block;} nav a + a {border-left: 1px solid #ccc;padding: 0.2em 0.4em;}</style>
+                                <ul id='ul' data-src='word_${count}.json'>${arr2.join(' ')}</ul>
+                                <script src='https://code.jquery.com/jquery-3.5.1.min.js'></script>
+                                <script src='../words.js'></script>`;
+                    fs.writeFile(`./words/word_${count}.html`,JSON.stringify(res),function () {});
+                    arr2 = [];
+                }
+            }
+        }
     });
 }
