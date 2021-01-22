@@ -11,9 +11,10 @@ var db = admin.firestore();
 
 // push_en_settings();
 // push_collection_to_firebase(1);
-// generate_collection(1);
-
-create_html();
+// generate_collection();
+genEnglish()
+// get_all_translate();
+// create_html();
 /*
 * Read 20k_en.txt & me_en.json
 * generate en_collection & en_setting */
@@ -176,4 +177,104 @@ function create_html() {
         }
         fs.writeFile(`./words/word_test.html`, `<ol id='ul'>${test.join(' ')}</ol>`,function () {});
     });
+}
+
+function get_all_translate() {
+    let arr = [];
+    for (let i = 1; i <= 10; i++) {
+        fs.readFile(`./words/word_${i}.json`, 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+            // console.log(...JSON.parse(data))
+            // console.log(typeof data, JSON.parse(data))
+            setTimeout(() => {
+                arr = [...arr, ...JSON.parse(data)]
+            }, 10);
+        });
+    }
+    setTimeout(() => {
+        console.log(arr.length);
+        const wrong = arr.filter(item => item.value.en === item.value.ru);
+        console.log(wrong.length);
+        arr = arr.filter(item => item.value.en !== item.value.ru);
+        console.log(arr.length);
+        fs.writeFile('./en_wrong.json',JSON.stringify(wrong),function () {});
+        fs.writeFile('./en_words.json',JSON.stringify(arr),function () {});
+
+    }, 10000);
+}
+
+
+function genEnglish() {
+    const files = ['collection', 'words', 'wrong', 'settings'];
+    const obj = {};
+    for (let i = 0; i < files.length; i++) {
+        fs.readFile(`./en_${files[i]}.json`, 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+            obj[files[i]] = JSON.parse(data);
+        });
+    }
+    setTimeout(() => {
+        console.log(obj.collection.length, 'collection');
+        console.log(obj.settings.length, 'settings');
+        console.log(obj.wrong.length, 'wrong');
+        console.log(obj.words.length, 'words');
+        console.log('>>>>>>>>>');
+        console.time('time');
+        collectFor: for (let i = 0; i < obj.collection.length; i++) {
+            const collect = obj.collection[i];
+            printProgress(`${i}`);
+            if (collect.key === 830) {
+                collect.key = {"key":830,"value":{"en":'true',"ru":"правда"}};
+            }
+            if (collect.key === 2391) {
+                collect.key = {"key":2391,"value":{"en":'false',"ru":"ложный"}};
+            }
+            if (collect.key === 2577) {
+                collect.key = {"key":2577,"value":{"en":'null',"ru":"ноль"}}
+            }
+            wordsFor: for (let j = 0; j < obj.words.length; j++) {
+                let word = obj.words[j];
+                if(word) {
+                    if(collect.key === word.key && collect.value.en === word.value.en) {
+                        collect.value.ru = word.value.ru;
+                        obj.words[j] = null;
+                        continue wordsFor;
+                        continue collectFor;
+                        // console.log(obj.collection[i].key, obj.words[i].key)
+                    }
+                }
+                // obj.english = [...obj.english, ]
+            }
+        }
+        console.timeEnd('time');
+        console.log('>>>>>>>>>');
+        console.log(obj.collection.length, 'collection');
+        console.log(obj.settings.length, 'settings');
+        console.log(obj.wrong.length, 'wrong');
+        console.log(obj.words.length, 'words');
+        console.log('>>>>>>>>>');
+        const english = {
+            collectionDescription: 'Основной словарь.отправить на Firebase в коллекции.',
+            collection: obj.collection,
+            settingsDescription: 'Остатки словаря после слияния коллекции и старого словаря на 13000 слов (memrise)',
+            settings: obj.settings,
+            wrongDescription: 'Ошибки перевода',
+            wrong: obj.wrong
+        };
+        console.log(english.collection.length, 'collection');
+        console.log(english.settings.length, 'settings');
+        console.log(english.wrong.length, 'wrong');
+        fs.writeFile('./english.json',JSON.stringify(english),function () {});
+        console.log(obj.words.filter(item => item).length);
+        console.log(obj.words.filter(item => item));
+    }, 10000);
+}
+function printProgress(progress){
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(progress);
 }
