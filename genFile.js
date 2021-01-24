@@ -10,9 +10,9 @@ admin.initializeApp({
 var db = admin.firestore();
 
 // push_en_settings();
-// push_collection_to_firebase(1);
+// push_collection_to_firebase(2);
 // generate_collection();
-genEnglish()
+genEnglish();
 // get_all_translate();
 // create_html();
 /*
@@ -61,7 +61,6 @@ function generate_collection() {
                         if (!itemJ.value.other) {
                             itemJ.value.other = itemI;
                             me.splice(i, 1);
-                        } else {
                         }
                     }
                 }
@@ -97,11 +96,11 @@ function generate_collection() {
 
 
 function push_collection_to_firebase(part) {
-    fs.readFile('./en_collection.json', 'utf8', function (err,data) {
+    fs.readFile('english.json', 'utf8', function (err,data) {
         if (err) {
             return console.log(err);
         }
-        var _data = JSON.parse(data);
+        var _data = JSON.parse(data).collection;
         console.log(_data.length);
 
         var pattern = _data.length.toString().split('').map(x => '0');
@@ -111,14 +110,14 @@ function push_collection_to_firebase(part) {
             var index = _pattern.concat((i).toString().split('')).join('');
 
             if (part === 1 && i < 10000) {
-              // adminFire();
+              adminFire();
             }
             if (part === 2 && i >= 10000) {
-              // adminFire();
+              adminFire();
             }
 
             function adminFire() {
-              admin.firestore().collection('Words').doc(lang[0].collection)
+              admin.firestore().collection('Words').doc('AnEIKa6c15nc7b9c8vYd')
                       .collection('collection').doc(`${index}`).set(_data[i].value).then(respond=>{
                           // console.log(respond);
                       // console.log(true, index);
@@ -195,9 +194,9 @@ function get_all_translate() {
     }
     setTimeout(() => {
         console.log(arr.length);
-        const wrong = arr.filter(item => item.value.en === item.value.ru);
+        const wrong = arr.filter(item => !item.value.ru.trim() || (item.value.en + '').toLowerCase() === item.value.ru.toLowerCase());
         console.log(wrong.length);
-        arr = arr.filter(item => item.value.en !== item.value.ru);
+        arr = arr.filter(item => item.value.ru.trim() && (item.value.en + '').toLowerCase() !== item.value.ru.toLowerCase());
         console.log(arr.length);
         fs.writeFile('./en_wrong.json',JSON.stringify(wrong),function () {});
         fs.writeFile('./en_words.json',JSON.stringify(arr),function () {});
@@ -239,7 +238,7 @@ function genEnglish() {
             wordsFor: for (let j = 0; j < obj.words.length; j++) {
                 let word = obj.words[j];
                 if(word) {
-                    if(collect.key === word.key && collect.value.en === word.value.en) {
+                    if(collect.key === word.key && collect.value.en.toLowerCase() === word.value.en.toLowerCase()) {
                         collect.value.ru = word.value.ru;
                         obj.words[j] = null;
                         continue wordsFor;
@@ -259,7 +258,7 @@ function genEnglish() {
         console.log('>>>>>>>>>');
         const english = {
             collectionDescription: 'Основной словарь.отправить на Firebase в коллекции.',
-            collection: obj.collection,
+            collection: obj.collection.filter(item => (item.value.ru + '').trim()),
             settingsDescription: 'Остатки словаря после слияния коллекции и старого словаря на 13000 слов (memrise)',
             settings: obj.settings,
             wrongDescription: 'Ошибки перевода',
