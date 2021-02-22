@@ -1,32 +1,42 @@
-<template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+<template lang="pug">
+  v-app#app(:class="{'Mobile': winSize.mobile, 'Tablet': winSize.tablet, 'Desktop': winSize.desktop}" v-if="globalLoading")
+    router-view
+    Notify(:mobile="winSize.mobile")
 </template>
+<script>
+  import Notify from '@/components/Notify'
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+  export default {
+    components: {
+      Notify,
+    },
+    computed: {
+      globalLoading(){return !this.$store.getters.globalLoading},
+      winSize() {return this.$store.getters.winSize}
+    },
+    created() {
+      window.addEventListener('resize', this.handleResize);
+      this.handleResize();
+    },
+    destroyed() {
+      window.removeEventListener('resize', this.handleResize);
+    },
+    methods: {
+      handleResize() {
+        this.$store.dispatch('winSize', {
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      }
     }
   }
-}
+</script>
+<style lang="scss">
+  @import "assets/sass/variable";
+  @import "assets/sass/mixin";
+  @import "assets/sass/global";
+  body, html {
+    min-height: 100vh;
+    overflow-y: auto !important;
+  }
 </style>

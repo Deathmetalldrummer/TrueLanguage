@@ -1,18 +1,22 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+<template lang="pug">
+    div
+        h1 skfskjhfksjdhdjhd
+        router-view
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'Home',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'Home',
+        components: {
+        },
+        data: () => ({
+            tabs: 'tab-1',
+        }),
+        computed: {
+            mobile() {return this.$store.getters.winSize.mobile},
+        }
+    }
 </script>
+
+<style scoped lang='sass'>
+</style>
