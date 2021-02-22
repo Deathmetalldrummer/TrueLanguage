@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import store from '../store/index.js';
 import PageNotFound from '@/views/PageNotFound';
 import Home from '@/views/Home';
+import Settings from '@/views/Settings';
 import Auth from "../views/Auth";
 import firebase from 'firebase/app'
 import 'firebase/firestore';
@@ -20,6 +21,12 @@ const routes = [
         name: 'Home',
       },
     ],
+    beforeEnter: authGuard
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
     beforeEnter: authGuard
   },
   {

@@ -1,7 +1,6 @@
 <template lang="pug">
-    div
-        h1 skfskjhfksjdhdjhd
-        router-view
+    .home
+        .home__content Home
 </template>
 
 <script>
@@ -19,4 +18,11 @@
 </script>
 
 <style scoped lang='sass'>
+.home
+    display: flex
+    min-height: 100vh
+    width: 100vw
+    justify-content: center
+    align-items: center
+.home__content
 </style>
