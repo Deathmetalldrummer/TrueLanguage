@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/firestore'
 import router from '../router'
 
 
@@ -81,6 +82,7 @@ export default {
 
                         if (respond.user.emailVerified) {
                             state.dispatch('globalLoading', true);
+                            state.dispatch('createUser', respond.user);
                             router.push('/');
                         } else {
                             state.commit('signInError', 'Your account is not verified, please check your email inbox');
@@ -97,7 +99,7 @@ export default {
                 .then(respond=>{
                     state.commit('user', respond.user.uid);
                     state.commit('signUpError', null);
-                    state.dispatch('emailVerify', respond.user.emailVerified);
+                    state.dispatch('emailVerify', respond.user);
                 })
                 .catch(error=>{
                     state.commit('signUpError', error.message);
@@ -114,19 +116,21 @@ export default {
                     console.log(error);
                 })
         },
-        createUser(state, {email, password}) {
-            console.log('createUser', email, password);
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then(respond=>{
-                    state.commit('user', respond.user.uid);
-                    state.commit('signUpError', null);
-                    state.dispatch('emailVerify', respond.user.emailVerified);
-                })
-                .catch(error=>{
-                    console.log('sign up error', error);
-                    state.commit('signUpError', error.message);
-                    state.commit('user', null);
-                });
+        createUser(state, user) {
+            const userDoc = firebase.firestore().collection('Users').doc(user.uid);
+            userDoc.get().then(respond=>{
+                if (!respond.exists) {
+                    userDoc.set({
+                        image: null,
+                        name: user.displayName,
+                        settings: {
+                            source: null,
+                            target: null,
+                            words: 100
+                        }
+                    });
+                }
+            })
         },
         emailVerify(state, user) {
             const _user = user || firebase.auth().currentUser;

@@ -156,7 +156,7 @@
             },
             signUp(){
                 if (this.$refs.formSignUp.validate()) {
-                    this.$store.dispatch('createUser', {
+                    this.$store.dispatch('signUp', {
                         email: this.emailSignUp,
                         password: this.passwordSignUp
                     });

@@ -2,16 +2,13 @@
   v-app(:class="{'Mobile': winSize.mobile, 'Tablet': winSize.tablet, 'Desktop': winSize.desktop}" v-if="globalLoading")
     router-view
     Notify(:mobile="winSize.mobile")
-    Fab
 </template>
 <script>
   import Notify from '@/components/Notify'
-  import Fab from '@/components/Fab'
 
   export default {
     components: {
       Notify,
-      Fab
     },
     computed: {
       globalLoading(){return !this.$store.getters.globalLoading},

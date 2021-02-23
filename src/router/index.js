@@ -2,9 +2,9 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store/index.js';
 import PageNotFound from '@/views/PageNotFound';
-import Home from '@/views/Home';
 import Settings from '@/views/Settings';
 import Auth from "../views/Auth";
+import Main from "@/views/Main";
 import firebase from 'firebase/app'
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -14,19 +14,18 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: Home,
+    component: Main,
     children: [
       {
         path: '',
-        name: 'Home',
+        name: 'List',
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: Settings,
       },
     ],
-    beforeEnter: authGuard
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    component: Settings,
     beforeEnter: authGuard
   },
   {
@@ -71,6 +70,7 @@ function authGuard(to, from, next) {
   function authSuccess(user) {
     store.dispatch('isAuth', true);
     store.dispatch('user', user.uid);
+    store.dispatch('settingsInit');
     store.dispatch('globalLoading', false);
     next();
   }
