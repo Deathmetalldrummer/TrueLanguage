@@ -157,22 +157,67 @@ function get_all_translate() {
 }
 
 function reform() {
-    fs.readFile(`./de_words.json`, 'utf8', function (err,data) {
+    fs.readFile(`./english.json`, 'utf8', function (err,data) {
         const _data = JSON.parse(data);
         // _data.length = 10;
-        const xxx = _data.map(item => {
+        // [
+        //     'collectionDescription',
+        //     'collection',
+        //     'settingsDescription',
+        //     'settings',
+        //     'wrongDescription',
+        //     'wrong'
+        // ]
+        const collection = _data.collection.map(item => {
             const _item = {
                 key: item.key,
                 value: {
-                    source: item.value.de,
-                    target: item.value.ru
+                    source: item.value.en,
+                    target: item.value.ru,
+                    html: item.value.html || null,
+                    other: item.value.other && {
+                        key: item.value.other.key,
+                        source: item.value.other.en,
+                        target: item.value.other.ru,
+                        additional: item.value.other.additional && {
+                            source: item.value.other.additional.en,
+                            target: item.value.other.additional.ru
+                        } || item.value.other.additional || null
+                    } || item.value.other || null
                 }
             }
             return _item;
         });
-        fs.writeFile('./deutsche.json',JSON.stringify(xxx),function () {});
+        const wrong = _data.wrong.map(item => {
+            const _item = {
+                key: item.key,
+                value: {
+                    source: item.value.en,
+                    target: item.value.ru,
+                }
+            }
+            return _item;
+        });
+        const settings = _data.settings.map(item => {
+            const _item = {
+                key: item.key,
+                source: item.en,
+                target: item.ru,
+                additional: item.additional && {
+                    source: item.additional.en,
+                    target: item.additional.ru,
+                } || null
+            }
+            return _item;
+        });
 
-        console.log(xxx);
+        const res = {
+            ..._data,
+            collection,
+            wrong,
+            settings,
+        }
+        fs.writeFile('./english.json',JSON.stringify(res),function () {});
 
     });
 }
