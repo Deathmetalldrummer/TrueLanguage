@@ -6,7 +6,7 @@ $('#button').on('click', (event) => {
         arr.push({
             key: $(item).data('id'),
             value: {
-                en: $(item).data('word'),
+                de: $(item).data('word'),
                 ru: $(item).text()
             }
         });

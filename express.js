@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 app.post('/words', cors(corsOptions), (req, res) => {
     console.log(req.body.file);
-    fs.writeFile(`./words/${req.body.file}`,req.body.content,function () {});
+    fs.writeFile(`./words/de/${req.body.file}`,req.body.content,function () {});
     res.send({data: 'true'})
 });
 

@@ -43,6 +43,7 @@ bower_components
 package-lock.json
 
 words/*.html
+words/de/*.html
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
