@@ -59,6 +59,9 @@
             mounted() {
                 console.log('route', this.$route.name);
             },
+            beforeCreate() {
+                store.dispatch('dataInit');
+            },
             beforeRouteEnter (to, from, next) {
                 const $words = store.getters.settings.words;
                 const $lang = store.getters.settings.source.value;

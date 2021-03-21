@@ -24,14 +24,14 @@
             data() { return this.$store.getters.data(this.currentLang) || [] },
             dataDelete() { return this.$store.getters.dataDelete(this.currentLang) || [] },
             day() {
-                const residue = this.data.length % +this.words;
-                const count = (this.data.length - residue) / +this.words;
+                const residue = this.data.length % +this.queryWords;
+                const count = (this.data.length - residue) / +this.queryWords;
                 return residue ? count + 1 : count;
             },
             mainData() {
                 const xMap = new Map();
                 for (let i = 0; i < this.day; i++) {
-                    xMap.set(i + 1, this.data.slice(i * +this.words, i * +this.words + +this.words))
+                    xMap.set(i + 1, this.data.slice(i * +this.queryWords, i * +this.queryWords + +this.queryWords))
                 }
                 return xMap;
             },
@@ -49,8 +49,9 @@
             }
         },
         mounted() {
+            this.$store.dispatch('dataInit');
             console.log('route', this.$route.name);
-        }
+        },
     }
 </script>
 

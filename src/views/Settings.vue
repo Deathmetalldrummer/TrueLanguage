@@ -53,7 +53,6 @@
                     if (key !== 'words') {
                         this.onDisabled(key, $event.value);
                     }
-                    this.$store.dispatch('data');
                 },
                 onDisabled(key, value) {
                     const list1 = ((key === 'source') && 'langTarget') || ((key === 'target') && 'langSource');
