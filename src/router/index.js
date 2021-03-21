@@ -5,6 +5,8 @@ import PageNotFound from '@/views/PageNotFound';
 import Settings from '@/views/Settings';
 import Auth from "../views/Auth";
 import Main from "@/views/Main";
+import List from "@/views/List";
+import SavedList from "@/views/SavedList";
 import firebase from 'firebase/app'
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -18,7 +20,18 @@ const routes = [
     children: [
       {
         path: '',
+        redirect: 'list/1',
+        component: List,
+      },
+      {
+        path: 'list/:id',
         name: 'List',
+        component: List,
+      },
+      {
+        path: 'list/:id',
+        name: 'SavedList',
+        component: SavedList,
       },
       {
         path: 'settings',
@@ -39,7 +52,11 @@ const routes = [
   },
   {
     path: '/404',
-    component: PageNotFound
+    component: PageNotFound,
+    beforeEnter: (to, from, next) => {
+      store.dispatch('globalLoading', false);
+      next();
+    }
   },
   {
     path: '*',

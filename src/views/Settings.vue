@@ -26,13 +26,13 @@
                     message: 'Слава Одину, Settings работает!',
                     langSource: [
                         { value: 'en', name: 'English' },
-                        { value: 'ru', name: 'Russian' },
+                        { value: 'ru', name: 'Russian', disabled: true},
                         { value: 'de', name: 'German' },
                     ],
                     langTarget: [
-                        { value: 'en', name: 'English' },
+                        { value: 'en', name: 'English', disabled: true },
                         { value: 'ru', name: 'Russian' },
-                        { value: 'de', name: 'German' },
+                        { value: 'de', name: 'German', disabled: true },
                     ],
                     save: {},
                 }
@@ -53,6 +53,7 @@
                     if (key !== 'words') {
                         this.onDisabled(key, $event.value);
                     }
+                    this.$store.dispatch('data');
                 },
                 onDisabled(key, value) {
                     const list1 = ((key === 'source') && 'langTarget') || ((key === 'target') && 'langSource');
