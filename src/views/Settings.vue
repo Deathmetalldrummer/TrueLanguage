@@ -70,7 +70,6 @@
 .settings
     display: flex
     min-height: 100vh
-    width: 100vw
     justify-content: center
     align-items: center
 .settings__content
