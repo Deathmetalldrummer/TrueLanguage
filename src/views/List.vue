@@ -12,48 +12,49 @@
                 span.langControl__target
                     v-switch(v-model='langTargetShow' :label='langTarget.toUpperCase()' color='success' hide-detail)
             ol.main__list
-                template(v-for="item of list(mainData.get(route))")
-                    li(v-if="item").main__item
-                        span.main__itemText(@click="openDescription(item.key, item)")
-                            span.main__itemText_index {{item.key}}
-                            span.main__itemText_postIndex -
-                            span.main__itemText_left(
+                li(v-for="item of list(mainData.get(route))" :key="item.key" v-if="item").main__item
+                    span.main__itemText(@click="openDescription(item.key, item)")
+                        span.main__itemText_index {{item.key}}
+                        span.main__itemText_postIndex -
+                        span.main__itemText_left
+                            span(v-show="langSourceShow"
                                 :contenteditable="edit === item.key"
                                 :ref="'source' + item.key"
                                 @click="edit === item.key && $event.stopPropagation()"
                                 @input="itemEditing.value.source = $event.target.innerText")
                                 | {{langSourceShow && item.value.source || ''}}
-                            span.main__itemText_center -
-                            span.main__itemText_right(
+                        span.main__itemText_center -
+                        span.main__itemText_right
+                            span(v-show="langTargetShow"
                                 :contenteditable="edit === item.key"
                                 :ref="'target' + item.key"
                                 @click="edit === item.key && $event.stopPropagation()"
                                 @input="itemEditing.value.target = $event.target.innerText")
-                                | {{langTargetShow && item.value.target || ''}}
-                        .main__itemControls
-                            template(v-if='edit === item.key')
-                                .btn_icon(@click="onSuccessEdit(item)")
-                                    Icons(name='check').icon
-                                .btn_icon(@click="onCancelEdit(item)")
-                                    Icons(name='close').icon
-                            template(v-else)
-                                .btn_icon(@click="onEdit(item)")
-                                    Icons(name='edit').icon
-                                .btn_icon(@click="onDelete(item.key)")
-                                    Icons(name='del').icon
-                        .main__itemDescription(v-if="openedDescription.indexOf(item.key) !== -1")
-                            .descriptionAdditional(
-                                v-if="item.value.other && additionalShow && langTargetShow"
-                                :contenteditable="edit === item.key && false"
-                                :ref="'other' + item.key"
-                                @input="itemEditing.value.other.additional.target = $event.target.innerText")
-                                | {{item.value.other.additional && item.value.other.additional.target}}
-                            .descriptionContent(
-                                :class="{'descriptionContent_hide': !contentShow}"
-                                v-html="item.value.html"
-                                :contenteditable="edit === item.key"
-                                :ref="'html' + item.key"
-                                @input="itemEditing.value.html = $event.target.innerHTML")
+                                | {{item.value.target || ''}}
+                    .main__itemControls
+                        template(v-if='edit === item.key')
+                            .btn_icon(@click="onSuccessEdit(item)")
+                                Icons(name='check').icon
+                            .btn_icon(@click="onCancelEdit(item)")
+                                Icons(name='close').icon
+                        template(v-else)
+                            .btn_icon(@click="onEdit(item)")
+                                Icons(name='edit').icon
+                            .btn_icon(@click="onDelete(item.key)")
+                                Icons(name='del').icon
+                    .main__itemDescription(v-if="openedDescription.indexOf(item.key) !== -1")
+                        .descriptionAdditional(
+                            v-if="item.value.other && additionalShow && langTargetShow"
+                            :contenteditable="edit === item.key && false"
+                            :ref="'other' + item.key"
+                            @input="itemEditing.value.other.additional.target = $event.target.innerText")
+                            | {{item.value.other.additional && item.value.other.additional.target}}
+                        .descriptionContent(
+                            :class="{'descriptionContent_hide': !contentShow}"
+                            v-html="item.value.html"
+                            :contenteditable="edit === item.key"
+                            :ref="'html' + item.key"
+                            @input="itemEditing.value.html = $event.target.innerHTML")
         nav.menu
             ul.menu__list
                 li(v-for="item of day").menu__item
@@ -126,7 +127,10 @@
                     this.$refs['source' + item.key][0].innerText = item.value.source;
                     this.$refs['target' + item.key][0].innerText = item.value.target;
                     // this.$refs['other' + item.key][0].innerText = item.value.other && item.value.other.additional.target;
-                    this.$refs['html' + item.key][0].innerHTML = item.value.html;
+
+                    if (this.$refs['html' + item.key] && this.$refs['html' + item.key].length) {
+                        this.$refs['html' + item.key][0].innerHTML = item.value.html;
+                    }
                     this.itemEditing = null;
                     this.edit = false;
                 },
@@ -264,11 +268,19 @@
             &_left
                 width: 40%
                 flex-grow: 1
+                span
+                    display: inline-block
+                    width: 100%
+                    height: 100%
             &_center
                 padding: 0 0.5em
             &_right
                 width: 50%
                 flex-grow: 1
+                span
+                    display: inline-block
+                    width: 100%
+                    height: 100%
         &Controls
             transition-duration: 0.3s
             position: relative
