@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore'
 
+const defaultSettings = {"source":{"value":"en","name":"English"},"target":{"value":"ru","name":"Russian"},"words":100};
 const timeKey = 'TrueLanguageTime';
 const settingsKey = 'TrueLanguageSettings';
 export default {
@@ -33,7 +34,7 @@ export default {
             firebase.firestore().collection('Users').doc(state.getters.user).get()
                 .then(respond=>{
                     state.commit('settings',
-                        respond.exists ? respond.data().settings : null
+                        respond.exists ? respond.data().settings : defaultSettings
                     );
                 });
         },
