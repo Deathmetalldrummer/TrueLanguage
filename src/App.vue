@@ -17,6 +17,7 @@
     created() {
       window.addEventListener('resize', this.handleResize);
       this.handleResize();
+      this.$store.commit('loadingFile');
     },
     destroyed() {
       window.removeEventListener('resize', this.handleResize);

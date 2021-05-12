@@ -5,8 +5,6 @@ import loading from './loading';
 import notify from './notify';
 import store from './store';
 import auth from './auth';
-import en from '../assets/english';
-import de from '../assets/deutsche';
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 Vue.use(Vuex);
@@ -14,8 +12,8 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     data: {
-      en: en.collection,
-      de,
+      en: [],
+      de: [],
     },
     currentLang: null,
     dataEdit: {
@@ -38,9 +36,25 @@ export default new Vuex.Store({
     currentLang:(state,payload)=>{state.currentLang = payload},
     dataEdit:(state, {id, payload})=>{state.dataEdit[id] = payload},
     dataDelete:(state, {id, payload})=>{state.dataDelete[id] = payload},
+    loadingFile:(state) => {
+      fetch('../assets/deutsche.json')
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            state.data.de = data;
+          });
+      fetch('../assets/english.json')
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            state.data.en = data.collection;
+          });
+    }
   },
   actions: {
-      currentLang:(state, payload=state.getters.settings.source.value)=>{
+    currentLang:(state, payload=state.getters.settings.source.value)=>{
       switch (payload) {
         case 'en':
           state.commit('currentLang', 'en');
