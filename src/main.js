@@ -5,7 +5,7 @@ import store from './store';
 import vuetify from './plugins/vuetify';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { firebaseConfig } from "./plugins/firebaseConfig";
+import { firebaseConfig, firebaseConfigDEV } from "./plugins/firebaseConfig";
 
 firebase.initializeApp(firebaseConfig);
 Vue.config.productionTip = false;
