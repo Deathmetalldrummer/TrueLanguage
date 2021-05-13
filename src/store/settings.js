@@ -7,7 +7,7 @@ const timeKey = 'TrueLanguageTime';
 const settingsKey = 'TrueLanguageSettings';
 export default {
     state: {
-        settings: null,
+        settings: defaultSettings
     },
     getters: {
         settings: state=>state.settings,

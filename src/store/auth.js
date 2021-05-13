@@ -124,8 +124,8 @@ export default {
                         image: null,
                         name: user.displayName,
                         settings: {
-                            source: null,
-                            target: null,
+                            source: { value: "en", name: "English" },
+                            target: { value: "ru", name: "Russian" },
                             words: 100
                         }
                     });

@@ -164,8 +164,8 @@
                 store.dispatch('dataInit');
             },
             beforeRouteEnter (to, from, next) {
-                const $words = store.getters.settings.words;
-                const $lang = store.getters.settings.source.value;
+                const $words = store.getters.settings && store.getters.settings.words;
+                const $lang = store.getters.settings && store.getters.settings.source.value;
                 const currentLang = store.getters.currentLang;
                 const {words, lang} = to.query;
                 const query = words && lang;
