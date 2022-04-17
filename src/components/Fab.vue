@@ -1,8 +1,16 @@
 <template lang="pug">
-    v-fab-transition
-        router-link(:to="routerLink")
-            v-btn(color='default' fab ).fab
-                font-awesome-icon(:icon="routerIcon" size="2x")
+    v-speed-dial(:open-on-hover='true')
+        template(v-slot:activator)
+            router-link(:to="routerLink")
+                v-btn(color='default' fab)
+                    font-awesome-icon(:icon="routerIcon" size="2x")
+        router-link(:to="routerDeleteLink")
+            v-btn(color='default' fab small)
+                font-awesome-icon(:icon="routerDeleteIcon" size="2x")
+        //router-link(to="/edit")
+            v-btn(color='default' fab small)
+                font-awesome-icon(icon="pencil-alt" size="2x")
+
 </template>
 
 <script>
@@ -22,14 +30,16 @@
             },
             routerIcon() {
                 return this.currentRouteName === 'Settings' ? 'home' : 'cog'
+            },
+            routerDeleteLink() {
+                return this.currentRouteName === 'Trash' ? '/' : '/trash'
+            },
+            routerDeleteIcon() {
+                return this.currentRouteName === 'Trash' ? 'home' : 'trash'
             }
         }
     }
 </script>
 
 <style scoped lang="sass">
-    .fab
-        bottom: 1em
-        left: 1em
-        position: fixed
 </style>

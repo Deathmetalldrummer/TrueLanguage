@@ -1,7 +1,7 @@
 <template lang="pug">
     div
         router-view
-        Fab
+        Fab.fab
 </template>
 
 <script>
@@ -21,4 +21,8 @@
 </script>
 
 <style scoped lang='sass'>
+.fab
+    bottom: 1em
+    left: 1em
+    position: fixed
 </style>

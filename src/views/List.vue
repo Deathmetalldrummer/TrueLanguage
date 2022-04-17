@@ -2,6 +2,8 @@
     .wrapper
         .main
             .langToggle
+                .langToggle__copy
+                    v-btn(@click="copy()") copy
                 span.langToggle__content
                     v-switch(v-model='contentShow' label='Toggle' color='red' hide-detail)
                 span.langToggle__additional
@@ -62,10 +64,11 @@
 </template>
 
 <script>
-    import { Quest } from '../components/Quest';
-    import store from '../store/index.js';
-    import Icons from '../components/Icons';
-    export default {
+import {Quest} from '../components/Quest';
+import store from '../store/index.js';
+import Icons from '../components/Icons';
+
+export default {
             name: 'List',
             components: {
                 Icons
@@ -109,6 +112,14 @@
                 },
             },
             methods: {
+                copy() {
+                    const str = this.list(this.mainData.get(this.route))
+                        .map(item => {
+                            return `${item.value.source} - ${item.value.target}`;
+                        })
+                        .join('\n');
+                    navigator.clipboard.writeText(str);
+                },
                 onEdit(item) {
                     this.itemEditing = JSON.parse(JSON.stringify(item));
                     this.edit = item.key;
@@ -118,6 +129,8 @@
                     const res = prompt(quest.value);
                     if (res === quest.res) {
                         this.$store.dispatch('dataEdit', {id: this.lang, payload: this.itemEditing});
+                    } else {
+                        alert("Sorry, it's wrong((")
                     }
                     this.itemEditing = null;
                     this.edit = false;
@@ -139,9 +152,11 @@
                     const res = prompt(quest.value);
                     if (res === quest.res) {
                         this.$store.dispatch('dataDelete', {id:  this.lang, payload: item});
+                    } else {
+                        alert("Sorry, it's wrong((")
                     }
                 },
-                list(list) {
+                list(list=[]) {
                     return list.map(item => (item && this.dataDelete.indexOf(item.key) === -1) ? item : null)
                         .filter(item => item)
                         .map(item => this.dataEdit.find(dataItem => dataItem.key === item.key) || item);
@@ -206,6 +221,7 @@
     display: flex
     justify-content: flex-end
     align-items: center
+    &__copy,
     &__content
         margin-right: 2em
     &__additional

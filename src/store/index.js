@@ -149,7 +149,22 @@ export default new Vuex.Store({
       }).catch((error) => {
         console.log("Error getting document:", error);
       });
-    }
+    },
+    deleteFromTrash:(state, id)=>{
+      const deleteCollection = firebase.firestore()
+          .collection('Users')
+          .doc(state.getters.user)
+          .collection('lang')
+          .doc(state.getters.currentLang);
+
+      const payload = state.getters.dataDelete(state.getters.currentLang).filter(item => item !== id);
+
+      deleteCollection.update({'delete': payload});
+      state.commit('dataDelete', {
+        id: state.getters.currentLang,
+        payload
+      })
+    },
   },
   modules: {
     settings,

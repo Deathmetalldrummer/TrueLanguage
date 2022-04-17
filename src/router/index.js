@@ -6,6 +6,7 @@ import Settings from '@/views/Settings';
 import Auth from "../views/Auth";
 import Main from "@/views/Main";
 import List from "@/views/List";
+import Trash from "@/views/Trash";
 import SavedList from "@/views/SavedList";
 import firebase from 'firebase/app'
 import 'firebase/firestore';
@@ -37,6 +38,11 @@ const routes = [
         path: 'settings',
         name: 'Settings',
         component: Settings,
+      },
+      {
+        path: 'trash',
+        name: 'Trash',
+        component: Trash,
       },
     ],
     beforeEnter: authGuard
